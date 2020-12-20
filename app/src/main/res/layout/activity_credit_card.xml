@@ -170,7 +170,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/buttonSignIn"
+        android:id="@+id/buttonAddCard"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="center"

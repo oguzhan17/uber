@@ -2,8 +2,8 @@ package com.ao.uber;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 
@@ -39,44 +39,60 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener {
 
     private GoogleMap mMap;
-    private Button btnFindPath;
-    private EditText editTextOrigin;
-    private EditText editTextDestination;
+    private Button mapSidebar;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarker = new ArrayList<>();
     private List<Polyline> polyLinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
 
+    int counter = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btnFindPath = (Button)findViewById(R.id.buttonFindPath);
-        editTextOrigin = (EditText)findViewById(R.id.editTextOrigin);
-        editTextDestination = (EditText)findViewById(R.id.editTextDestination);
-        btnFindPath.setOnClickListener(new View.OnClickListener() {
+
+        mapSidebar = findViewById(R.id.mapSideBar);
+
+        sendRequest();
+
+        mapSidebar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+                sendIntent();
             }
         });
 
     }
 
-    private void sendRequest() {
-        String origin = editTextOrigin.getText().toString();
-        String destination = editTextDestination.getText().toString();
+    private void sendIntent() {
+        Intent intent = new Intent(MapsActivity.this, MapsSidebarActivity.class);
+        startActivity(intent);
+    }
 
-        if (origin.isEmpty()) {
+    private void sendRequest() {
+
+
+        Intent intentReceived = getIntent();
+        Bundle data=intentReceived.getExtras();
+        String origin= data.getString("origin");
+        String destination= data.getString("destination");
+
+
+        System.out.println("---------------" + origin + destination);
+
+        if (origin == null) {
             Toast.makeText(this, "Please enter origin!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (destination.isEmpty()){
+        if (destination == null){
             Toast.makeText(this, "Please enter destination!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -143,6 +159,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polyLinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarker = new ArrayList<>();
+
+
 
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));

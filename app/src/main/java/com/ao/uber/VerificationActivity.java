@@ -1,7 +1,6 @@
 package com.ao.uber;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -115,7 +112,7 @@ public class VerificationActivity extends AppCompatActivity {
         editText4 = findViewById(R.id.editTextCode4);
         editText5 = findViewById(R.id.editTextCode5);
         editText6 = findViewById(R.id.editTextCode6);
-        buttonSignIn = findViewById(R.id.buttonSignIn);
+        buttonSignIn = findViewById(R.id.buttonAddCard);
         buttonResend = findViewById(R.id.buttonResend);
         TextView pleaseType = findViewById(R.id.pleaseType);
 
