@@ -6,17 +6,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-
 
 import com.ao.uber.Modules.DirectionFinder;
 import com.ao.uber.Modules.DirectionFinderListener;
@@ -35,9 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener {
 
+    int counter = 0;
     private GoogleMap mMap;
     private Button mapSidebar;
     private List<Marker> originMarkers = new ArrayList<>();
@@ -45,13 +42,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Polyline> polyLinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
 
-    int counter = 0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -69,8 +64,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sendIntent();
             }
         });
-
     }
+
 
     private void sendIntent() {
         Intent intent = new Intent(MapsActivity.this, MapsSidebarActivity.class);
@@ -81,18 +76,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Intent intentReceived = getIntent();
-        Bundle data=intentReceived.getExtras();
-        String origin= data.getString("origin");
-        String destination= data.getString("destination");
+        Bundle data = intentReceived.getExtras();
+        String origin = data.getString("origin");
+        String destination = data.getString("destination");
 
 
-        System.out.println("---------------" + origin + destination);
+
 
         if (origin == null) {
             Toast.makeText(this, "Please enter origin!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (destination == null){
+        if (destination == null) {
             Toast.makeText(this, "Please enter destination!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -127,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
 
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -161,12 +156,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         destinationMarker = new ArrayList<>();
 
 
-
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
-            ((TextView)findViewById(R.id.textViewDistance)).setText(route.distance.text);
-            ((TextView)findViewById(R.id.textViewTime)).setText(route.duration.text);
+            ((TextView) findViewById(R.id.textViewDistance)).setText(route.distance.text);
+            ((TextView) findViewById(R.id.textViewTime)).setText(route.duration.text);
 
+            System.out.println(route.distance.text + "-------------");
             originMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
                     .title(route.startAddress)
@@ -179,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             PolylineOptions polylineOptions = new PolylineOptions()
                     .geodesic(true)
-                    .color(Color.BLUE)
+                    .color(Color.GREEN)
                     .width(10);
 
             for (int i = 0; i < route.points.size(); i++) {
