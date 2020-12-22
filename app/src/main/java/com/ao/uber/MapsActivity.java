@@ -36,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     int counter = 0;
     private GoogleMap mMap;
-    private Button mapSidebar;
+    private Button mapBack;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarker = new ArrayList<>();
     private List<Polyline> polyLinePaths = new ArrayList<>();
@@ -54,16 +54,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        mapSidebar = findViewById(R.id.mapSideBar);
+        mapBack = findViewById(R.id.mapBack);
 
         sendRequest();
 
-        mapSidebar.setOnClickListener(new View.OnClickListener() {
+        mapBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendIntent();
             }
         });
+
+
     }
 
 
@@ -79,8 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle data = intentReceived.getExtras();
         String origin = data.getString("origin");
         String destination = data.getString("destination");
-
-
 
 
         if (origin == null) {
@@ -161,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ((TextView) findViewById(R.id.textViewDistance)).setText(route.distance.text);
             ((TextView) findViewById(R.id.textViewTime)).setText(route.duration.text);
 
-            System.out.println(route.distance.text + "-------------");
+
             originMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
                     .title(route.startAddress)
