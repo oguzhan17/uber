@@ -20,14 +20,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewBack"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginHorizontal="30dp"
-            android:fontFamily="@font/open_sans_light"
-            android:textColor="@color/black"
-            app:drawableStartCompat="@drawable/ic_back" />
+            android:background="@drawable/ic_back" />
 
         <TextView
             android:id="@+id/textView4"

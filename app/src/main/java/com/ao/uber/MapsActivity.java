@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.SyncFailedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +37,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     int counter = 0;
     private GoogleMap mMap;
-    private Button mapBack;
+    private Button mapBack,buttonSendRequest;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarker = new ArrayList<>();
     private List<Polyline> polyLinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
-
+    String kms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +56,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         mapBack = findViewById(R.id.mapBack);
+        buttonSendRequest = findViewById(R.id.buttonSendRequest);
 
         sendRequest();
+
+
 
         mapBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +70,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
+
     }
+
 
 
     private void sendIntent() {
@@ -79,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Intent intentReceived = getIntent();
         Bundle data = intentReceived.getExtras();
+        if( getIntent().getExtras() != null){
         String origin = data.getString("origin");
         String destination = data.getString("destination");
 
@@ -96,32 +103,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }}
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         int reqCode = 1;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
             return;
         }
@@ -160,6 +149,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
             ((TextView) findViewById(R.id.textViewDistance)).setText(route.distance.text);
             ((TextView) findViewById(R.id.textViewTime)).setText(route.duration.text);
+            String kmtext = route.distance.text;
+            String replaceString=kmtext.replaceAll("km","");
+            double km=Double.parseDouble(replaceString.trim());
+            double kmm = km/4;
+            kms = String.valueOf(kmm);
+            ((TextView) findViewById(R.id.tvPrice)).setText("$" +kms);
+
+
 
 
             originMarkers.add(mMap.addMarker(new MarkerOptions()
@@ -177,11 +174,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .color(Color.GREEN)
                     .width(10);
 
+
             for (int i = 0; i < route.points.size(); i++) {
                 polylineOptions.add(route.points.get(i));
             }
 
             polyLinePaths.add(mMap.addPolyline(polylineOptions));
         }
+        buttonSendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intnt = new Intent(getApplicationContext(), CreditCardActivity.class);
+                Bundle data1 = new Bundle();
+                data1.putString("kms",kms);
+                intnt.putExtras(data1);
+                startActivity(intnt);
+            }
+        });
+
+
+
     }
 }
